@@ -7,6 +7,8 @@
 
 class UInputMappingContext;
 class UInputAction;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class LEARNING_PROJECT_API ASlashCharacter : public ACharacter
@@ -15,6 +17,8 @@ class LEARNING_PROJECT_API ASlashCharacter : public ACharacter
 
 public:
 	ASlashCharacter();
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -32,9 +36,10 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 
-public:	
-	virtual void Tick(float DeltaTime) override;
+private:	
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* SpringArm;
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* ViewCamera;
 };
