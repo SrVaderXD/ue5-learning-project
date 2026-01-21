@@ -33,6 +33,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* SlashLookAction;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* SlashJumpAction;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 
