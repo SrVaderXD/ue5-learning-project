@@ -18,6 +18,7 @@ void AItems::BeginPlay()
 	Super::BeginPlay();
 
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItems::OnSphereOverlap);
+	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItems::OnSphereOverlapEnd);
 }
 
 float AItems::TransformedSin()
@@ -32,10 +33,19 @@ float AItems::TransformedCos()
 
 void AItems::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	const FString OtherActorName = OtherActor->GetName();
+	const FString OtherActorName = FString("Begining overlap with:") + OtherActor->GetName();
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Blue, OtherActorName);
+	}
+}
+
+void AItems::OnSphereOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	const FString OtherActorName = FString("Ending overlap with:") + OtherActor->GetName();
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);
 	}
 }
 
