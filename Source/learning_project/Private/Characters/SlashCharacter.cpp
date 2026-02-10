@@ -10,6 +10,9 @@
 
 #include "GroomComponent.h"
 
+#include "Items/Items.h"
+#include "Items/Weapons/Weapon.h"
+
 ASlashCharacter::ASlashCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -75,6 +78,15 @@ void ASlashCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void ASlashCharacter::EKeyPressed()
+{
+	AWeapon* OverlappedWeapon = Cast<AWeapon>(OverlappedItem);
+	if (OverlappedWeapon)
+	{
+		OverlappedWeapon->Equip(GetMesh(), FName("hand_r_socket"));
+	}
+}
+
 void ASlashCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -90,7 +102,6 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(SlashMoveAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Move);
 		EnhancedInputComponent->BindAction(SlashLookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
 		EnhancedInputComponent->BindAction(SlashJumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
+		EnhancedInputComponent->BindAction(SlashEKeyAction, ETriggerEvent::Triggered, this, &ASlashCharacter::EKeyPressed);
 	}
-
 }
-

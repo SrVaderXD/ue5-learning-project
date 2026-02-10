@@ -10,6 +10,7 @@ class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 class UGroomComponent;
+class AItems;
 
 UCLASS()
 class LEARNING_PROJECT_API ASlashCharacter : public ACharacter
@@ -20,6 +21,7 @@ public:
 	ASlashCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	FORCEINLINE void SetOverlappedItem(AItems* Item) { OverlappedItem = Item; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -36,9 +38,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* SlashJumpAction;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* SlashEKeyAction;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-
+	void EKeyPressed();
 
 private:	
 	UPROPERTY(VisibleAnywhere)
@@ -52,4 +57,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Hair")
 	UGroomComponent* Eyebrows;
+
+	UPROPERTY(VisibleInstanceOnly)
+	AItems* OverlappedItem;
 };
