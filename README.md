@@ -14,7 +14,10 @@ The project follows an online course and focuses on understanding core UE5.
 This repository is part of an ongoing learning process and will be expanded
 incrementally.
 
-## Current Focus
+## Implemented so far
 
-- Enhanced Input system
-- Basic character movement
+- Enhanced Input System
+- Character movement using the camera forward vector
+- Animation state handling using a C++ enum
+- Foot Inverse Kinematics (IK)
+- Collision and overlap handling
