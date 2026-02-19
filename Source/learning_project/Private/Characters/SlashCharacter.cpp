@@ -88,6 +88,14 @@ void ASlashCharacter::EKeyPressed()
 	}
 }
 
+void ASlashCharacter::Attack()
+{
+	if (GEngine && CharacterState == ECharacterState::ECS_EquippedOneHandedWeapon)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, FString("Attack!"));
+	}
+}
+
 void ASlashCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -104,5 +112,6 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(SlashLookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
 		EnhancedInputComponent->BindAction(SlashJumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
 		EnhancedInputComponent->BindAction(SlashEKeyAction, ETriggerEvent::Triggered, this, &ASlashCharacter::EKeyPressed);
+		EnhancedInputComponent->BindAction(SlashAttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
 	}
 }

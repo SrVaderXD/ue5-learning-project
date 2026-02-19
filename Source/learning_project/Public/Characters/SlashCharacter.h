@@ -43,9 +43,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* SlashEKeyAction;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* SlashAttackAction;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void EKeyPressed();
+	void Attack();
 
 private:
 	ECharacterState CharacterState = ECharacterState::ECS_Unarmed;
