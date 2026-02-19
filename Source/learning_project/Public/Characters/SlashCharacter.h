@@ -12,6 +12,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UGroomComponent;
 class AItems;
+class UAnimMontage;
 
 UCLASS()
 class LEARNING_PROJECT_API ASlashCharacter : public ACharacter
@@ -68,4 +69,11 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItems* OverlappedItem;
+
+	/*
+	* Animation Montages
+	*/
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	UAnimMontage* AttackMontage;
 };

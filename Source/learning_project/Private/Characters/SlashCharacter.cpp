@@ -13,6 +13,8 @@
 #include "Items/Items.h"
 #include "Items/Weapons/Weapon.h"
 
+#include "Animation/AnimMontage.h"
+
 ASlashCharacter::ASlashCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -90,9 +92,28 @@ void ASlashCharacter::EKeyPressed()
 
 void ASlashCharacter::Attack()
 {
-	if (GEngine && CharacterState == ECharacterState::ECS_EquippedOneHandedWeapon)
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AttackMontage)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, FString("Attack!"));
+		AnimInstance->Montage_Play(AttackMontage);
+		int32 Selection = FMath::RandRange(0, 2);
+		FName SectionName = FName();
+
+		switch (Selection)
+		{
+		case 0:
+			SectionName = FName("Attack1");
+			break;
+		case 1:
+			SectionName = FName("Attack2");
+			break;
+		case 2:
+			SectionName = FName("Attack3");
+			break;
+		default:
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName);
 	}
 }
 
