@@ -62,8 +62,15 @@ protected:
 
 	void PlayAttackMontage();
 
+	UFUNCTION(BlueprintCallable)
+	void AttackMontageEnd();
+
+	bool CanAttack();
+
 private:
 	ECharacterState CharacterState = ECharacterState::ECS_Unarmed;
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
 	UPROPERTY(VisibleAnywhere)

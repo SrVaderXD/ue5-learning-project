@@ -91,13 +91,20 @@ void ASlashCharacter::EKeyPressed()
 }
 
 void ASlashCharacter::Attack()
-{
-	bool AttackCondition = (ActionState == EActionState::EAS_Unoccupied && CharacterState == ECharacterState::ECS_EquippedOneHandedWeapon);
-	if (AttackCondition)
+{ 
+	if (CanAttack())
 	{
 		PlayAttackMontage();
 		ActionState = EActionState::EAS_Attacking;
 	}
+}
+
+bool ASlashCharacter::CanAttack()
+{
+	return (
+		ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState != ECharacterState::ECS_Unarmed
+	);
 }
 
 
@@ -146,4 +153,9 @@ void ASlashCharacter::PlayAttackMontage()
 		}
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}
+}
+
+void ASlashCharacter::AttackMontageEnd()
+{
+	ActionState = EActionState::EAS_Unoccupied;
 }
