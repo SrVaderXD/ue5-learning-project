@@ -58,6 +58,7 @@ void ASlashCharacter::BeginPlay()
 
 void ASlashCharacter::Move(const FInputActionValue& Value)
 {
+	if (ActionState == EActionState::EAS_Attacking) return;
 
 	const FRotator ControlRotation = GetControlRotation();
 	const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
