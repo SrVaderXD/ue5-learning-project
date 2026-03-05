@@ -13,6 +13,7 @@ class UCameraComponent;
 class UGroomComponent;
 class AItems;
 class UAnimMontage;
+class AWeapon;
 
 UCLASS()
 class LEARNING_PROJECT_API ASlashCharacter : public ACharacter
@@ -67,6 +68,10 @@ protected:
 
 	bool CanAttack();
 
+	void PlayDrawSheathMontage(FName SectionName);
+	bool CanSheath();
+	bool CanDraw();
+
 private:
 	ECharacterState CharacterState = ECharacterState::ECS_Unarmed;
 
@@ -88,10 +93,16 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItems* OverlappedItem;
 
+	UPROPERTY(VisibleAnywhere, Category = "Weapo")
+	AWeapon* EquippedWeapon;
+
 	/*
 	* Animation Montages
 	*/
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	UAnimMontage* DrawSheathMontage;
 };

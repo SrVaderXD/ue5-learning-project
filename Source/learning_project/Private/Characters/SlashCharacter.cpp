@@ -56,6 +56,26 @@ void ASlashCharacter::BeginPlay()
 	
 }
 
+void ASlashCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(SlashMoveAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Move);
+		EnhancedInputComponent->BindAction(SlashLookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
+		EnhancedInputComponent->BindAction(SlashJumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
+		EnhancedInputComponent->BindAction(SlashEKeyAction, ETriggerEvent::Triggered, this, &ASlashCharacter::EKeyPressed);
+		EnhancedInputComponent->BindAction(SlashAttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
+	}
+}
+
 void ASlashCharacter::Move(const FInputActionValue& Value)
 {
 	if (ActionState == EActionState::EAS_Attacking) return;
@@ -88,11 +108,27 @@ void ASlashCharacter::EKeyPressed()
 	{
 		OverlappedWeapon->Equip(GetMesh(), FName("hand_r_socket"));
 		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+		OverlappedItem = nullptr;
+		EquippedWeapon = OverlappedWeapon;
+	}
+
+	else
+	{
+		if (CanSheath())
+		{
+			PlayDrawSheathMontage(FName("Sheath"));
+			CharacterState = ECharacterState::ECS_Unarmed;
+		}
+		else if (CanDraw())
+		{
+			PlayDrawSheathMontage(FName("Draw"));
+			CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+		}
 	}
 }
 
 void ASlashCharacter::Attack()
-{ 
+{
 	if (CanAttack())
 	{
 		PlayAttackMontage();
@@ -105,28 +141,7 @@ bool ASlashCharacter::CanAttack()
 	return (
 		ActionState == EActionState::EAS_Unoccupied &&
 		CharacterState != ECharacterState::ECS_Unarmed
-	);
-}
-
-
-void ASlashCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		EnhancedInputComponent->BindAction(SlashMoveAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Move);
-		EnhancedInputComponent->BindAction(SlashLookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
-		EnhancedInputComponent->BindAction(SlashJumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
-		EnhancedInputComponent->BindAction(SlashEKeyAction, ETriggerEvent::Triggered, this, &ASlashCharacter::EKeyPressed);
-		EnhancedInputComponent->BindAction(SlashAttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
-	}
+		);
 }
 
 void ASlashCharacter::PlayAttackMontage()
@@ -159,4 +174,31 @@ void ASlashCharacter::PlayAttackMontage()
 void ASlashCharacter::AttackMontageEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
+}
+
+bool ASlashCharacter::CanSheath()
+{
+	return (
+		ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState != ECharacterState::ECS_Unarmed
+		);
+}
+
+bool ASlashCharacter::CanDraw()
+{
+	return (
+		ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState == ECharacterState::ECS_Unarmed &&
+		EquippedWeapon
+	);
+}
+
+void ASlashCharacter::PlayDrawSheathMontage(FName SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DrawSheathMontage)
+	{
+		AnimInstance->Montage_Play(DrawSheathMontage);
+		AnimInstance->Montage_JumpToSection(SectionName);
+	}
 }
