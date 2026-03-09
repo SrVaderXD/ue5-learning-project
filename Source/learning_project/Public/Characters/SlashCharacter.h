@@ -72,6 +72,19 @@ protected:
 	bool CanSheath();
 	bool CanDraw();
 
+	/**
+	* End
+	*/
+
+	UFUNCTION(BlueprintCallable)
+	void SheathSword();
+
+	UFUNCTION(BlueprintCallable)
+	void DrawSword();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishDrawingSword();
+
 private:
 	ECharacterState CharacterState = ECharacterState::ECS_Unarmed;
 

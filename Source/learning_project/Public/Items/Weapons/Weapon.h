@@ -12,6 +12,7 @@ class LEARNING_PROJECT_API AWeapon : public AItems
 
 public:
 	void Equip(USceneComponent* Parent, FName SocketName);
+	void AttachMeshToSocket(USceneComponent* Parent, const FName& SocketName);
 
 protected:
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;

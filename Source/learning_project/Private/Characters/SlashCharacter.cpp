@@ -78,7 +78,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASlashCharacter::Move(const FInputActionValue& Value)
 {
-	if (ActionState == EActionState::EAS_Attacking) return;
+	if (ActionState != EActionState::EAS_Unoccupied) return;
 
 	const FRotator ControlRotation = GetControlRotation();
 	const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
@@ -118,11 +118,13 @@ void ASlashCharacter::EKeyPressed()
 		{
 			PlayDrawSheathMontage(FName("Sheath"));
 			CharacterState = ECharacterState::ECS_Unarmed;
+			ActionState = EActionState::EAS_DrawingSheathingSword;
 		}
 		else if (CanDraw())
 		{
 			PlayDrawSheathMontage(FName("Draw"));
 			CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+			ActionState = EActionState::EAS_DrawingSheathingSword;
 		}
 	}
 }
@@ -191,6 +193,27 @@ bool ASlashCharacter::CanDraw()
 		CharacterState == ECharacterState::ECS_Unarmed &&
 		EquippedWeapon
 	);
+}
+
+void ASlashCharacter::SheathSword()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("PelvisSocket"));
+	}
+}
+
+void ASlashCharacter::DrawSword()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("hand_r_socket"));
+	}
+}
+
+void ASlashCharacter::FinishDrawingSword()
+{
+	ActionState = EActionState::EAS_Unoccupied;
 }
 
 void ASlashCharacter::PlayDrawSheathMontage(FName SectionName)
