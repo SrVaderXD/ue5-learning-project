@@ -4,6 +4,7 @@
 #include "Items/Items.h"
 #include "Weapon.generated.h"
 
+class USoundBase;
 
 UCLASS()
 class LEARNING_PROJECT_API AWeapon : public AItems
@@ -17,4 +18,8 @@ public:
 protected:
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 	virtual void OnSphereOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	USoundBase* EquipSound;
 };
