@@ -5,6 +5,7 @@
 #include "Weapon.generated.h"
 
 class USoundBase;
+class UBoxComponent;
 
 UCLASS()
 class LEARNING_PROJECT_API AWeapon : public AItems
@@ -12,6 +13,7 @@ class LEARNING_PROJECT_API AWeapon : public AItems
 	GENERATED_BODY()
 
 public:
+	AWeapon();
 	void Equip(USceneComponent* Parent, FName SocketName);
 	void AttachMeshToSocket(USceneComponent* Parent, const FName& SocketName);
 
@@ -22,4 +24,7 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	USoundBase* EquipSound;
+
+	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
+	UBoxComponent* WeaponBox;
 };

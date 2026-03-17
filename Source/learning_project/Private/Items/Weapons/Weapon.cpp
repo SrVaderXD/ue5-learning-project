@@ -2,6 +2,13 @@
 #include "Characters/SlashCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
+
+AWeapon::AWeapon()
+{
+	WeaponBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Weapon Box"));
+	WeaponBox->SetupAttachment(GetRootComponent());
+}
 
 void AWeapon::Equip(USceneComponent* Parent, FName SocketName)
 {
