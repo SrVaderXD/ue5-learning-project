@@ -27,6 +27,9 @@ public:
 	FORCEINLINE void SetOverlappedItem(AItems* Item) { OverlappedItem = Item; }
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
 
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
+
 protected:
 	virtual void BeginPlay() override;
 

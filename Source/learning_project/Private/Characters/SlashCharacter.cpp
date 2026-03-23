@@ -15,6 +15,8 @@
 
 #include "Animation/AnimMontage.h"
 
+#include "Components/BoxComponent.h"
+
 ASlashCharacter::ASlashCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -223,5 +225,13 @@ void ASlashCharacter::PlayDrawSheathMontage(FName SectionName)
 	{
 		AnimInstance->Montage_Play(DrawSheathMontage);
 		AnimInstance->Montage_JumpToSection(SectionName);
+	}
+}
+
+void ASlashCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled)
+{
+	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
+	{
+		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
 	}
 }
