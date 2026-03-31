@@ -1,6 +1,7 @@
 #include "Enemy/Enemy.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "learning_project/DebugMacros.h"
 
 AEnemy::AEnemy()
 {
@@ -32,3 +33,7 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void AEnemy::GetHit(const FVector& ImpactPoint)
+{
+	DRAW_SPHERE(ImpactPoint, FColor::Purple);
+}

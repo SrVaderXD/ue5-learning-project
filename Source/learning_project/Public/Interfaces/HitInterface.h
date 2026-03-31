@@ -18,4 +18,5 @@ class LEARNING_PROJECT_API IHitInterface
 	GENERATED_BODY()
 
 public:
+	virtual void GetHit(const FVector& ImpactPoint) = 0;
 };
