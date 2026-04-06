@@ -218,13 +218,13 @@ void ASlashCharacter::FinishDrawingSword()
 	ActionState = EActionState::EAS_Unoccupied;
 }
 
-void ASlashCharacter::PlayDrawSheathMontage(FName SectionName)
+void ASlashCharacter::PlayDrawSheathMontage(const FName& SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && DrawSheathMontage)
 	{
 		AnimInstance->Montage_Play(DrawSheathMontage);
-		AnimInstance->Montage_JumpToSection(SectionName);
+		AnimInstance->Montage_JumpToSection(SectionName, DrawSheathMontage);
 	}
 }
 

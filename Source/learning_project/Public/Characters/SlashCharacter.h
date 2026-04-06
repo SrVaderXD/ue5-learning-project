@@ -71,7 +71,7 @@ protected:
 
 	bool CanAttack();
 
-	void PlayDrawSheathMontage(FName SectionName);
+	void PlayDrawSheathMontage(const FName& SectionName);
 	bool CanSheath();
 	bool CanDraw();
 
