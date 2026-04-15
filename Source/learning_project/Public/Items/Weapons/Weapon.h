@@ -17,6 +17,7 @@ public:
 	void Equip(USceneComponent* Parent, FName SocketName);
 	void AttachMeshToSocket(USceneComponent* Parent, const FName& SocketName);
 	FORCEINLINE UBoxComponent* GetWeaponBox() const { return WeaponBox; }
+	TArray<AActor*> IgnoreActors;
 
 protected:
 	virtual void BeginPlay() override;
