@@ -1,0 +1,30 @@
+#include "Breakable/BreakableActor.h"
+#include "GeometryCollection/GeometryCollectionComponent.h"
+
+ABreakableActor::ABreakableActor()
+{
+	PrimaryActorTick.bCanEverTick = false;
+
+	GeometryCollection = CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("Geometry Collection"));
+	SetRootComponent(GeometryCollection);
+	GeometryCollection->SetGenerateOverlapEvents(true);
+	GeometryCollection->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+}
+
+void ABreakableActor::GetHit(const FVector& ImpactPoint)
+{
+
+}
+
+void ABreakableActor::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+void ABreakableActor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
