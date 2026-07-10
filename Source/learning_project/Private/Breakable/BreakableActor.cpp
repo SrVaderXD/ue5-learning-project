@@ -11,11 +11,6 @@ ABreakableActor::ABreakableActor()
 	GeometryCollection->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 }
 
-void ABreakableActor::GetHit(const FVector& ImpactPoint)
-{
-
-}
-
 void ABreakableActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -28,3 +23,7 @@ void ABreakableActor::Tick(float DeltaTime)
 
 }
 
+void ABreakableActor::GetHit_Implementation(const FVector& ImpactPoint)
+{
+
+}
