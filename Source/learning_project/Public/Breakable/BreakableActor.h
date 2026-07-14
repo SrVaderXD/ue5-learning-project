@@ -6,6 +6,7 @@
 #include "BreakableActor.generated.h"
 
 class UGeometryCollectionComponent;
+class UCapsuleComponent;
 
 UCLASS()
 class LEARNING_PROJECT_API ABreakableActor : public AActor, public IHitInterface
@@ -22,7 +23,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BluePrintReadWrite)
 	UGeometryCollectionComponent* GeometryCollection;
+
+	UPROPERTY(VisibleAnywhere, BluePrintReadWrite)
+	UCapsuleComponent* Capsule;
+
+private:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ATreasure> TreasureClass;
 };
