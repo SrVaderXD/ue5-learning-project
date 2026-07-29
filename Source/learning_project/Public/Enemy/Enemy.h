@@ -32,6 +32,9 @@ protected:
 	*/
 
 private:
+	UPROPERTY(VisibleAnywhere)
+	class UAttributeComponent* Attributes;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* HitReactMontage;
 
