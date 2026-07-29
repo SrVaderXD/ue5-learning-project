@@ -22,7 +22,25 @@ ABreakableActor::ABreakableActor()
 void ABreakableActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GeometryCollection->OnChaosBreakEvent.AddDynamic(this, &ABreakableActor::OnChaosBreakEvent);
 	
+}
+
+void ABreakableActor::OnChaosBreakEvent(const FChaosBreakEvent& BreakEvent)
+{
+	if (bBroken)return;
+	bBroken = true;
+	UWorld* World = GetWorld();
+	if (World && TreasureClasses.Num() > 0)
+	{
+		FVector Location = GetActorLocation();
+		Location.Z += 40.f;
+
+		const int32 Selection = FMath::RandRange(0, TreasureClasses.Num() - 1);
+
+		World->SpawnActor<ATreasure>(TreasureClasses[Selection], Location, GetActorRotation());
+	}
 }
 
 void ABreakableActor::Tick(float DeltaTime)

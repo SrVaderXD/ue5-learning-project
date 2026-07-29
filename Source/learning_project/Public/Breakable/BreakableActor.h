@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite)
 	UCapsuleComponent* Capsule;
 
+	UFUNCTION()
+	virtual void OnChaosBreakEvent(const FChaosBreakEvent& BreakEvent);
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Treasure Properties")
 	TArray< TSubclassOf<class ATreasure>> TreasureClasses;
