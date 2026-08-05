@@ -35,6 +35,9 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UAttributeComponent* Attributes;
 
+	UPROPERTY(VisibleAnywhere)
+	class UHealthBarComponent* HealthBarWidget;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* HitReactMontage;
 
