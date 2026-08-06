@@ -108,7 +108,7 @@ void ASlashCharacter::EKeyPressed()
 	AWeapon* OverlappedWeapon = Cast<AWeapon>(OverlappedItem);
 	if (OverlappedWeapon)
 	{
-		OverlappedWeapon->Equip(GetMesh(), FName("hand_r_socket"));
+		OverlappedWeapon->Equip(GetMesh(), FName("hand_r_socket"), this, this);
 		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
 		OverlappedItem = nullptr;
 		EquippedWeapon = OverlappedWeapon;

@@ -14,7 +14,7 @@ class LEARNING_PROJECT_API AWeapon : public AItems
 
 public:
 	AWeapon();
-	void Equip(USceneComponent* Parent, FName SocketName);
+	void Equip(USceneComponent* Parent, FName SocketName, AActor* NewOwner, APawn* NewInstigator);
 	void AttachMeshToSocket(USceneComponent* Parent, const FName& SocketName);
 	FORCEINLINE UBoxComponent* GetWeaponBox() const { return WeaponBox; }
 	TArray<AActor*> IgnoreActors;
@@ -43,4 +43,7 @@ private:
 	
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* BoxTraceEnd;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	float Damage = 20.f;
 };
