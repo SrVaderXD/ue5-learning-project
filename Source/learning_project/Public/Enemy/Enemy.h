@@ -27,6 +27,7 @@ protected:
 	* Play Montage Functions
 	*/
 	void PlayHitMontage(const FName& SectionName);
+	void PlayDeathMontage();
 	/**
 	* End
 	*/
@@ -40,6 +41,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* HitReactMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	UAnimMontage* DeathMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Sounds")
 	USoundBase* HitSound;
