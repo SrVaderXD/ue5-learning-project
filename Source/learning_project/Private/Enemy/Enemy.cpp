@@ -26,6 +26,10 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	if (HealthBarWidget)
+	{
+		HealthBarWidget->SetVisibility(false);
+	}
 	
 }
 
@@ -53,18 +57,23 @@ void AEnemy::PlayDeathMontage()
 		{
 		case 0:
 			SectionName = FName("Death1");
+			DeathPose = EDeathPose::EDP_Dead1;
 			break;
 		case 1:
 			SectionName = FName("Death2");
+			DeathPose = EDeathPose::EDP_Dead2;
 			break;
 		case 2:
 			SectionName = FName("Death3");
+			DeathPose = EDeathPose::EDP_Dead3;
 			break;
 		case 3:
 			SectionName = FName("Death4");
+			DeathPose = EDeathPose::EDP_Dead4;
 			break;
 		case 4:
 			SectionName = FName("Death5");
+			DeathPose = EDeathPose::EDP_Dead5;
 			break;
 		default:
 			break;
@@ -72,12 +81,20 @@ void AEnemy::PlayDeathMontage()
 
 		AnimInstance->Montage_JumpToSection(SectionName, DeathMontage);
 	}
+
+	if (HealthBarWidget)
+	{
+		HealthBarWidget->SetVisibility(false);
+	}
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetLifeSpan(20.f);
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	ShowHPBasedOnDistance();
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -89,6 +106,11 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
 	//DRAW_SPHERE(ImpactPoint, FColor::Purple);
+
+	if (HealthBarWidget)
+	{
+		HealthBarWidget->SetVisibility(true);
+	}
 
 	if (Attributes && Attributes->IsAlive())
 	{
@@ -169,5 +191,23 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}
+	CombatTarget = EventInstigator->GetPawn();
 	return DamageAmount;
+}
+
+void AEnemy::ShowHPBasedOnDistance()
+{
+	if (CombatTarget)
+	{
+		const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
+
+		if (DistanceToTarget > CombatRadius)
+		{
+			CombatTarget = nullptr;
+			if (HealthBarWidget)
+			{
+				HealthBarWidget->SetVisibility(false);
+			}
+		}
+	}
 }
