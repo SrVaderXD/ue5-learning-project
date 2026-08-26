@@ -62,4 +62,19 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	double CombatRadius = 500.f;
+
+	/*
+	NAVIGATION
+	*/
+
+	UPROPERTY()
+
+	class AAIController* EnemyController;
+
+	UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
+	AActor* CurrentPatrolTarget;
+
+	UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
+	TArray<AActor*> PatrolTargets;
+
 };
