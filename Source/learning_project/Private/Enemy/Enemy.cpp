@@ -41,21 +41,14 @@ void AEnemy::BeginPlay()
 	}
 	
 	EnemyController = Cast<AAIController>(GetController());
-	if (EnemyController && CurrentPatrolTarget)
-	{
-		FAIMoveRequest MoveRequest;
-		MoveRequest.SetGoalActor(CurrentPatrolTarget);
-		MoveRequest.SetAcceptanceRadius(15.f);
-		FNavPathSharedPtr NavPath;
-		EnemyController->MoveTo(MoveRequest, &NavPath);
-		TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
+	MoveToTarget(CurrentPatrolTarget);
+}
 
-		for (auto& Point : PathPoints)
-		{
-			const FVector& Location = Point.Location;
-			DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f);
-		}
-	}
+void AEnemy::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	ShowHPBasedOnDistance();
+	UpdateTargetAndMove();
 }
 
 void AEnemy::PlayHitMontage(const FName& SectionName)
@@ -114,12 +107,6 @@ void AEnemy::PlayDeathMontage()
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetLifeSpan(20.f);
-}
-
-void AEnemy::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	ShowHPBasedOnDistance();
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -222,17 +209,69 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 
 void AEnemy::ShowHPBasedOnDistance()
 {
-	if (CombatTarget)
+	if (!InTargetRange(CombatTarget, CombatRadius))
 	{
-		const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
-
-		if (DistanceToTarget > CombatRadius)
+		CombatTarget = nullptr;
+		if (HealthBarWidget)
 		{
-			CombatTarget = nullptr;
-			if (HealthBarWidget)
-			{
-				HealthBarWidget->SetVisibility(false);
-			}
+			HealthBarWidget->SetVisibility(false);
 		}
 	}
+}
+
+AActor* AEnemy::ChoosePatrolTarget()
+{
+	TArray<AActor*> ValidTargets;
+	for (AActor* Target : PatrolTargetsArray)
+	{
+		if (Target != CurrentPatrolTarget)
+		{
+			ValidTargets.AddUnique(Target);
+		}
+	}
+
+	if (ValidTargets.Num() > 0)
+	{
+		const int32 TargetSelection = FMath::RandRange(0, ValidTargets.Num() - 1);
+		return ValidTargets[TargetSelection];
+	}
+
+	return nullptr;
+}
+
+
+bool AEnemy::InTargetRange(AActor* Target, double Radius)
+{
+	if (Target == nullptr) return false;
+
+	const double DistanceToTarget = (Target->GetActorLocation() - GetActorLocation()).Size();
+	DRAW_SPHERE_SingleFrame(GetActorLocation());
+	DRAW_SPHERE_SingleFrame(Target->GetActorLocation());
+	return DistanceToTarget <= Radius;
+}
+
+void AEnemy::MoveToTarget(AActor* Target)
+{
+	if (EnemyController == nullptr || Target == nullptr) return;
+	FAIMoveRequest MoveRequest;
+	MoveRequest.SetGoalActor(Target);
+	MoveRequest.SetAcceptanceRadius(15.f);
+	EnemyController->MoveTo(MoveRequest);
+}
+
+void AEnemy::UpdateTargetAndMove()
+{
+	if (InTargetRange(CurrentPatrolTarget, PatrolRadius))
+	{
+		CurrentPatrolTarget = ChoosePatrolTarget();
+
+		const float WaitTime = FMath::RandRange(WaitMin, WaitMax);
+
+		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, WaitTime);
+	}
+}
+
+void AEnemy::PatrolTimerFinished()
+{
+	MoveToTarget(CurrentPatrolTarget);
 }

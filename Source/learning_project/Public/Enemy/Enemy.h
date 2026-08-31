@@ -37,6 +37,10 @@ protected:
 	EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
 	void ShowHPBasedOnDistance();
+	bool InTargetRange(AActor* Target, double Radius);
+	AActor* ChoosePatrolTarget();
+	void UpdateTargetAndMove();
+	void MoveToTarget(AActor* Target);
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -75,6 +79,18 @@ private:
 	AActor* CurrentPatrolTarget;
 
 	UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
-	TArray<AActor*> PatrolTargets;
+	TArray<AActor*> PatrolTargetsArray;
+
+	UPROPERTY(EditAnywhere)
+	double PatrolRadius = 200.f;
+
+	FTimerHandle PatrolTimer;
+	void PatrolTimerFinished();
+
+	UPROPERTY(EditAnywhere, Category = "AI Navigation")
+	float WaitMin = 5.f;
+
+	UPROPERTY(EditAnywhere, Category = "AI Navigation")
+	float WaitMax = 10.f;
 
 };
