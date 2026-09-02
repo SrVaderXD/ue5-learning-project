@@ -42,12 +42,22 @@ protected:
 	void UpdateTargetAndMove();
 	void MoveToTarget(AActor* Target);
 
+	UFUNCTION()
+	void PawnSeen(APawn* SeenPawn);
+
 private:
+	/*
+	Components
+	*/
+
 	UPROPERTY(VisibleAnywhere)
 	class UAttributeComponent* Attributes;
 
 	UPROPERTY(VisibleAnywhere)
 	class UHealthBarComponent* HealthBarWidget;
+
+	UPROPERTY(VisibleAnywhere)
+	class UPawnSensingComponent* PawnSensing;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* HitReactMontage;
