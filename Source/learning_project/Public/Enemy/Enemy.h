@@ -36,7 +36,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
-	void ShowHPBasedOnDistance();
+	void CheckCombatTarget();
 	bool InTargetRange(AActor* Target, double Radius);
 	AActor* ChoosePatrolTarget();
 	void UpdateTargetAndMove();
@@ -77,6 +77,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	double CombatRadius = 500.f;
 
+	UPROPERTY(EditAnywhere)
+	double AttackRadius = 150.f;
+
 	/*
 	NAVIGATION
 	*/
@@ -103,4 +106,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "AI Navigation")
 	float WaitMax = 10.f;
 
+	/******/
+
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 };

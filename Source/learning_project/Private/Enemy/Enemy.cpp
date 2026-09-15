@@ -61,8 +61,16 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	ShowHPBasedOnDistance();
-	UpdateTargetAndMove();
+
+	if (EnemyState > EEnemyState::EES_Patrolling)
+	{
+		CheckCombatTarget();
+	}
+
+	else 
+	{
+		UpdateTargetAndMove();
+	}
 }
 
 void AEnemy::PlayHitMontage(const FName& SectionName)
@@ -218,10 +226,13 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}
 	CombatTarget = EventInstigator->GetPawn();
+	EnemyState = EEnemyState::EES_Chasing;
+	GetCharacterMovement()->MaxWalkSpeed = 300.f;
+	MoveToTarget(CombatTarget);
 	return DamageAmount;
 }
 
-void AEnemy::ShowHPBasedOnDistance()
+void AEnemy::CheckCombatTarget()
 {
 	if (!InTargetRange(CombatTarget, CombatRadius))
 	{
@@ -230,6 +241,24 @@ void AEnemy::ShowHPBasedOnDistance()
 		{
 			HealthBarWidget->SetVisibility(false);
 		}
+		EnemyState = EEnemyState::EES_Patrolling;
+		GetCharacterMovement()->MaxWalkSpeed = 125.f;
+		MoveToTarget(CurrentPatrolTarget);
+	}
+	
+	else if (!InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing)
+	{
+		EnemyState = EEnemyState::EES_Chasing;
+		GetCharacterMovement()->MaxWalkSpeed = 300.f;
+		MoveToTarget(CombatTarget);
+	}
+
+	else if (InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking)
+	{
+		// Inside attack range, attack character
+		EnemyState = EEnemyState::EES_Attacking;
+		//TODO
+		UE_LOG(LogTemp, Warning, TEXT("ATTACK!"));
 	}
 }
 
@@ -292,5 +321,19 @@ void AEnemy::PatrolTimerFinished()
 
 void AEnemy::PawnSeen(APawn* SeenPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PAWN SEEN!"));
+	if (EnemyState == EEnemyState::EES_Chasing) return;
+
+	if (SeenPawn->ActorHasTag(FName("SlashCharacter")))
+	{
+		GetWorldTimerManager().ClearTimer(PatrolTimer);
+		GetCharacterMovement()->MaxWalkSpeed = 300.f;
+		CombatTarget = SeenPawn;
+
+		if (EnemyState != EEnemyState::EES_Attacking)
+		{
+			EnemyState = EEnemyState::EES_Chasing;
+			MoveToTarget(CombatTarget);
+			UE_LOG(LogTemp, Warning, TEXT("PAWN SEEN!"));
+		}
+	}
 }
